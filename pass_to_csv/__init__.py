@@ -5,7 +5,7 @@ import logging
 import sys
 import subprocess
 import csv
-
+import codecs
 
 def main():
     home = os.environ['HOME']
@@ -40,7 +40,7 @@ def scandir(directory, directory_prefix, csv):
             name = directory+'/'+file.name[:-4]
             password = subprocess.run(['pass', name], stdout=subprocess.PIPE)
             if password.returncode == 0:
-                csv.writerow([name, password.stdout.rstrip()])
+                csv.writerow([name, password.stdout.rstrip().decode("utf-8")])
             else:
                 sys.exit('Cannot get the password for ' +
                          directory + '/' + file.name)
