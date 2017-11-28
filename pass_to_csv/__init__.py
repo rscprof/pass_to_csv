@@ -10,6 +10,12 @@ import subprocess
 import csv
 import codecs
 import argparse
+import gettext
+
+import gettext
+gettext.install('pass_to_csv')
+
+
 
 class PrepareFilter:
     """
@@ -197,17 +203,17 @@ def main():
     home = os.environ['HOME']
     parser = argparse.ArgumentParser(
         usage=
-        "pass_to_csv [-h] [-v] -6 General -7 Pass [-u user] ... [-u user] [-p prefix] [-p prefix]",
-        description="Export from passwordstore.org storage to csv file")
-    parser.add_argument('-6', '--column6', help='default value for column 6')
-    parser.add_argument('-7', '--column7', help='default value for column 7')
+        _('pass_to_csv [-h] [-v] -6 General -7 Pass [-u user] ... [-u user] [-p prefix] [-p prefix]'),
+        description=_('Export from passwordstore.org storage to csv file'))
+    parser.add_argument('-6', '--column6', help=_('default value for column 6'))
+    parser.add_argument('-7', '--column7', help=_('default value for column 7'))
     parser.add_argument('-u', '--username',
-                        help='substring for check username existing', action='append')
+                        help=_('substring for check username existing'), action='append')
 
 
-    parser.add_argument('-v', '--verbose', help='show verbose information', action='store_true')
+    parser.add_argument('-v', '--verbose', help=_('show verbose information'), action='store_true')
     parser.add_argument('-p', '--prefix',
-                        help='prefix of name for selecting groups', action='append')
+                        help=_('prefix of name for selecting groups'), action='append')
 
     args = parser.parse_args()
     if args.verbose:
@@ -233,7 +239,7 @@ def main():
 
     except FileNotFoundError as err:
         if err.filename == directory_prefix:
-            print("Password storage doesn't exist")
+            print(_('Password storage doesn\'t exist'))
         else:
             raise err
 

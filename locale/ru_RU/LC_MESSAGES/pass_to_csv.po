@@ -1,0 +1,57 @@
+# Russian (Russia) translations for PROJECT.
+# Copyright (C) 2017 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2017.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: v0.3\n"
+"Report-Msgid-Bugs-To: rscprof@gmail.com\n"
+"POT-Creation-Date: 2017-11-28 20:22+0300\n"
+"PO-Revision-Date: 2017-11-28 20:27+0300\n"
+"Last-Translator: Glusker Alexandr <rscprof@gmail.com>\n"
+"Language: ru_RU\n"
+"Language-Team: ru_RU <rscprof@gmail.com>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.5.1\n"
+
+#: pass_to_csv/__init__.py:200
+msgid ""
+"pass_to_csv [-h] [-v] -6 General -7 Pass [-u user] ... [-u user] [-p "
+"prefix] [-p prefix]"
+msgstr ""
+"pass_to_csv [-h] [-v] -6 General -7 Pass [-u user] ... [-u user] [-p "
+"prefix] [-p prefix]"
+
+#: pass_to_csv/__init__.py:201
+msgid "Export from passwordstore.org storage to csv file"
+msgstr "Экспорт из хранилища passwordstore.org в csv-файл"
+
+#: pass_to_csv/__init__.py:202
+msgid "default value for column 6"
+msgstr "значение по умолчанию для столбца 6"
+
+#: pass_to_csv/__init__.py:203
+msgid "default value for column 7"
+msgstr "значение по умолчанию для столбца 7"
+
+#: pass_to_csv/__init__.py:205
+msgid "substring for check username existing"
+msgstr "подстрока для проверки наличия имени пользователя"
+
+#: pass_to_csv/__init__.py:208
+msgid "show verbose information"
+msgstr "показ вспомогательной информации"
+
+#: pass_to_csv/__init__.py:210
+msgid "prefix of name for selecting groups"
+msgstr "префикс в названии, который переносится из названия пароля в название группы"
+
+#: pass_to_csv/__init__.py:236
+msgid "Password storage doesn't exist"
+msgstr "Хранилище паролей не обнаружено"
+

@@ -16,7 +16,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 
 setup(
     name='pass_to_csv',
-    version='0.2',
+    version='0.3',
     description='Pipe from passwordstore keeper to csv format',
     long_description=long_description,
     url='https://github.com/rscprof/pass_to_csv',
@@ -44,5 +44,9 @@ setup(
             'pass_to_csv=pass_to_csv:main',
         ],
     },
+    data_files=[
+	('/usr/share/locale/en_US/LC_MESSAGES/',['locale/en_US/LC_MESSAGES/pass_to_csv.mo']),
+	('/usr/share/locale/ru_RU/LC_MESSAGES/',['locale/ru_RU/LC_MESSAGES/pass_to_csv.mo'])
+    ],
 )
 
