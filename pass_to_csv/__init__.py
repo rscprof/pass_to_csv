@@ -6,10 +6,17 @@ import sys
 import subprocess
 import csv
 import codecs
+import argparse
 
 def main():
     home = os.environ['HOME']
-#   logging.basicConfig(stream=sys.stderr,level=logging.DEBUG)
+    parser = argparse.ArgumentParser(usage="pass_to_csv [-h] [-v]",
+                                     description="Export from passwordstore.org storage to csv file")
+    parser.add_argument('-v','--verbose',help='show verbose information',action='store_true')
+
+    args = parser.parse_args()
+    if args.verbose:
+        logging.basicConfig(stream=sys.stderr,level=logging.DEBUG)
     directory_prefix = home+'/.password-store'
     try:
         csvfile = csv.writer(sys.stdout)
