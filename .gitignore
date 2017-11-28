@@ -1,3 +1,4 @@
 build
 dist
 pass_to_csv.egg-info
+*.swp

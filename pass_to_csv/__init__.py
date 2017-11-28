@@ -6,13 +6,19 @@ import sys
 import subprocess
 import csv
 import codecs
+import argparse
 
 class PrepareFilter:
     """
     filter convert ["xxx","yyy"] to ["xxx","","yyy","","","General","Pass"]
     """
+    def __init__(self, column6, column7):
+        self.column6 = column6
+        self.column7 = column7
+
+
     def run(self, list):
-        return [list[0],"",list[1],"","","General","Pass"]
+        return [list[0],"",list[1],"","",self.column6,self.column7]
 
 class DotFilters:
     """
@@ -34,6 +40,45 @@ class BaseChainFilter:
             return self.chain.run(list)
         else:
             return result
+
+class PrefixChainFilter (BaseChainFilter):
+    """
+    filter that searches prefix in second section before /
+    add move in into other group
+    """
+    def __init__(self, chain,prefix):
+        super(PrefixChainFilter,self).__init__(chain)
+        self.prefix = prefix
+
+    def runInside(self, list):
+        slashIndex = list[0].find('/')
+        if slashIndex!=-1:
+            firstPart = list[0][:slashIndex]
+            if firstPart == self.prefix:
+                logging.debug('Find prefix '+self.prefix+' into '+list[0])
+                list[0] = list[0][slashIndex+1:]
+                list[5] = firstPart
+                return list
+
+
+class UsernameChainFilter (BaseChainFilter):
+    """
+    filter that searches username in last section after /
+    add move it into other column
+    """
+    def __init__(self, chain,usernameSubstring):
+        super(UsernameChainFilter,self).__init__(chain)
+        self.usernameSubstring = usernameSubstring
+
+    def runInside(self, list):
+        slashIndex = list[0].rfind('/')
+        if slashIndex!=-1:
+            lastPart = list[0][slashIndex+1:]
+            if lastPart.find(self.usernameSubstring)!=-1:
+                logging.debug('Find username '+self.usernameSubstring+' into '+lastPart)
+                list[1] = lastPart
+                list[0] = list[0][:slashIndex]
+                return list
 
 
 class DropSlashFilter (BaseChainFilter):
@@ -73,7 +118,7 @@ class URLChainFilter (BaseChainFilter):
         name = list[0]
         password = list[2]
         splitFirstPart = name.split('/')
-        if (len(splitFirstPart)!=2 or splitFirstPart[0]==""):
+        if (len(splitFirstPart)!=2 or splitFirstPart[0]=="" or splitFirstPart[0].find('.')==-1):
             return None
         list[0] = splitFirstPart[0]
         list[1] = splitFirstPart[1]
@@ -113,16 +158,38 @@ class filter:
 
 def main():
     home = os.environ['HOME']
-#    logging.basicConfig(stream=sys.stderr,level=logging.DEBUG)
+    parser = argparse.ArgumentParser(
+        usage="pass_to_csv [-h] [-v] -6 General -7 Pass [-u user] ... [-u user] [-p prefix] [-p prefix]",
+                                     description="Export from passwordstore.org storage to csv file")
+    parser.add_argument('-6','--column6',help='default value for column 6')
+    parser.add_argument('-7','--column7',help='default value for column 7')
+    parser.add_argument('-u','--username',help='substring for check username existing',action='append')
+
+    parser.add_argument('-v','--verbose',help='show verbose information',action='store_true')
+    parser.add_argument('-p','--prefix',help='prefix of name for selecting groups',action='append')
+
+    args = parser.parse_args()
+    if args.verbose:
+        logging.basicConfig(stream=sys.stderr,level=logging.DEBUG)
     directory_prefix = home+'/.password-store'
     try:
         csvfile = csv.writer(sys.stdout)
+        chain = DropSlashFilter (identityFunctor())
+        #test for username
+        if (args.username):
+            for u in args.username:
+                chain = UsernameChainFilter(chain,u)
+        if (args.prefix):
+            for p in args.prefix:
+                chain = PrefixChainFilter(chain,p)
+        chain = URLChainFilter(chain)
+        chain = URLWithoutUsernameChainFilter(chain)
+
+
         scandir("", directory_prefix,
                 filterWithFunctor(csvfile,
-                DotFilters(PrepareFilter(),
-                           URLWithoutUsernameChainFilter(
-                                  URLChainFilter(
-                                      DropSlashFilter(identityFunctor()))))))
+                DotFilters(PrepareFilter(args.column6,args.column7),chain)))
+
     except FileNotFoundError as err:
         if (err.filename == directory_prefix):
             print("Password storage doesn't exist")
