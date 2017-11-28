@@ -1,0 +1,3 @@
+include locale/en_US/LC_MESSAGES/pass_to_csv.mo
+include locale/ru_RU/LC_MESSAGES/pass_to_csv.mo
+
